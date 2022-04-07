@@ -6,6 +6,7 @@ const jobRouter = require("./api/jobs/job.router");
 const assetRouter = require("./api/assets/asset.router");
 const commentRouter = require("./api/comments/comment.router");
 var cors = require("cors");
+const PORT = 3010;
 
 const app = express();
 app.use(cors());
@@ -21,6 +22,6 @@ app.use("/api/assets", assetRouter);
 
 app.use("/api/comments", commentRouter);
 
-app.listen(process.env.APP_PORT, () => {
-  console.log("Server running");
+app.listen(process.env.PORT || PORT, () => {
+  console.log(`Server running on PORT ${PORT}`);
 });
