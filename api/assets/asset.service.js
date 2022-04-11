@@ -12,7 +12,7 @@ module.exports = {
         data.asset_location,
         data.refrigerate_type,
         data.warranty,
-        data.status,
+        data.asset_status,
       ],
       (error, results, fields) => {
         if (error) {

@@ -24,7 +24,8 @@ module.exports = {
   },
   getUsers: (callBack) => {
     pool.query(
-      `select UserID, FirstName, LastName, EmailID, PhoneNumber from users`,
+      `select ut.UserID, ut.FirstName, ut.LastName, ut.Role, ut.EmailID, ut.PhoneNumber, ut.status, ut.Client_ID, ct.Client_Name, ct.Client_Address, ct.Client_Contact, ct.Client_Status from users ut
+		INNER JOIN clients ct ON ut.Client_ID = ct.Client_ID;`,
       [],
       (error, results, fields) => {
         if (error) {
@@ -37,7 +38,8 @@ module.exports = {
   },
   getUserByUserId: (id, callBack) => {
     pool.query(
-      `select UserID, FirstName, LastName, EmailID, PhoneNumber from users where UserID = ?`,
+      `select ut.UserID, ut.FirstName, ut.LastName, ut.Role, ut.EmailID, ut.PhoneNumber, ut.status, ut.Client_ID, ct.Client_Name, ct.Client_Address, ct.Client_Contact, ct.Client_Status from users ut
+		INNER JOIN clients ct ON ut.Client_ID = ct.Client_ID where ut.UserID = ?`,
       [id],
       (error, results, fields) => {
         if (error) {
@@ -49,13 +51,15 @@ module.exports = {
   },
   updateUser: (data, callBack) => {
     pool.query(
-      `update users set FirstName=?, LastName=?, EmailID=?, password=?, PhoneNumber=? where UserID = ?`,
+      `update users set FirstName=?, LastName=?, Role=?, Client_ID=?, EmailID=?, PhoneNumber=?, status=? where UserID = ?`,
       [
         data.first_name,
         data.last_name,
+        data.role,
+        data.clientid,
         data.emailid,
-        data.password,
         data.number,
+        data.status,
         data.id,
       ],
       (error, results, fields) => {
@@ -87,6 +91,20 @@ module.exports = {
           callBack(error);
         }
         //console.log(results);
+        return callBack(null, results);
+      }
+    );
+  },
+  getTechnicians: (role, callBack) => {
+    pool.query(
+      `select ut.UserID, ut.FirstName, ut.LastName, ut.Role, ut.EmailID, ut.PhoneNumber, ut.status, ut.Client_ID, ct.Client_Name, ct.Client_Address, ct.Client_Contact, ct.Client_Status from users ut
+		INNER JOIN clients ct ON ut.Client_ID = ct.Client_ID where ut.Role=?`,
+      [role],
+      (error, results, fields) => {
+        if (error) {
+          console.log(error);
+          return callBack(error);
+        }
         return callBack(null, results);
       }
     );

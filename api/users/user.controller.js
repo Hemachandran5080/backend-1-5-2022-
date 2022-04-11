@@ -3,6 +3,7 @@ const {
   getUserByUserEmail,
   getUserByUserId,
   getUsers,
+  getTechnicians,
   updateUser,
   deleteUser,
 } = require("./user.service");
@@ -51,6 +52,7 @@ module.exports = {
           token: jsontoken,
           username: results[0].FirstName,
           role: results[0].Role,
+          client_ID: results[0].Client_ID,
         });
       } else {
         return res.json({
@@ -94,8 +96,8 @@ module.exports = {
   },
   updateUsers: (req, res) => {
     const body = req.body;
-    const salt = genSaltSync(10);
-    body.password = hashSync(body.password, salt);
+    // const salt = genSaltSync(10);
+    // body.password = hashSync(body.password, salt);
     updateUser(body, (err, results) => {
       if (err) {
         console.log(err);
@@ -123,6 +125,19 @@ module.exports = {
       return res.json({
         success: 1,
         message: "user deleted successfully",
+      });
+    });
+  },
+  getTechnicians: (req, res) => {
+    const role = req.params.role;
+    getTechnicians(role, (err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      return res.json({
+        success: 1,
+        data: results,
       });
     });
   },

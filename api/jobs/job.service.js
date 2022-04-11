@@ -3,15 +3,15 @@ const pool = require("../../config/database");
 module.exports = {
   create: (data, callBack) => {
     pool.query(
-      `insert into jobs(Job_ID, FClient_ID, UserID, Job_Subject, Job_Description, Job_Type, Client_Contact, Job_Status) values(?,?,?,?,?,?,?,?)`,
+      `insert into jobs(Job_ID, FClient_ID, UserID, Asset_ID, Job_Subject, Job_Description, Job_Type, Job_Status) values(?,?,?,?,?,?,?,?)`,
       [
         data.job_id,
         data.fclient_id,
         data.userid,
+        data.asset_id,
         data.job_subject,
         data.job_description,
         data.job_type,
-        data.client_contact,
         data.job_status,
       ],
       (error, results, fields) => {
@@ -24,7 +24,7 @@ module.exports = {
   },
   getJobs: (callBack) => {
     pool.query(
-      ` select jt.Job_ID, jt.FClient_ID, jt.UserID, jt.Job_Subject, jt.Job_Description, jt.Job_Type, jt.Job_Status,
+      `select jt.Job_ID, jt.FClient_ID, jt.UserID, jt.Job_Subject, jt.Job_Description, jt.Job_Type, jt.Job_Status,
          ut.UserID, ut.FirstName, ut.LastName, ut.Role, ut.PhoneNumber, ct.Client_ID, ct.Client_Name, ct.Client_Address, ct.Client_Contact from jobs jt
           INNER JOIN users ut ON jt.UserID = ut.UserID
           INNER JOIN clients ct ON jt.FClient_ID = ct.Client_ID`,
