@@ -1,9 +1,32 @@
 const pool = require("../../config/database");
 
+var d = new Date();
+d = new Date(d.getTime());
+var date_format_str =
+  d.getFullYear().toString() +
+  "-" +
+  ((d.getMonth() + 1).toString().length == 2
+    ? (d.getMonth() + 1).toString()
+    : "0" + (d.getMonth() + 1).toString()) +
+  "-" +
+  (d.getDate().toString().length == 2
+    ? d.getDate().toString()
+    : "0" + d.getDate().toString()) +
+  " " +
+  (d.getHours().toString().length == 2
+    ? d.getHours().toString()
+    : "0" + d.getHours().toString()) +
+  ":" +
+  ((parseInt(d.getMinutes() / 5) * 5).toString().length == 2
+    ? (parseInt(d.getMinutes() / 5) * 5).toString()
+    : "0" + (parseInt(d.getMinutes() / 5) * 5).toString()) +
+  ":00";
+console.log(date_format_str);
+
 module.exports = {
   create: (data, callBack) => {
     pool.query(
-      `insert into jobs(Job_ID, FClient_ID, UserID, Asset_ID, Job_Subject, Job_Description, Job_Type, Job_Status) values(?,?,?,?,?,?,?,?)`,
+      `insert into jobs(Job_ID, FClient_ID, UserID, Asset_ID, Job_Subject, Job_Description, Job_Type, Job_Status, Created_On) values(?,?,?,?,?,?,?,?,?)`,
       [
         data.job_id,
         data.fclient_id,
@@ -13,6 +36,7 @@ module.exports = {
         data.job_description,
         data.job_type,
         data.job_status,
+        date_format_str,
       ],
       (error, results, fields) => {
         if (error) {
@@ -24,7 +48,7 @@ module.exports = {
   },
   getJobs: (callBack) => {
     pool.query(
-      `select jt.Job_ID, jt.FClient_ID, jt.UserID, jt.Job_Subject, jt.Job_Description, jt.Job_Type, jt.Job_Status,
+      `select jt.Job_ID, jt.FClient_ID, jt.UserID, jt.Job_Subject, jt.Job_Description, jt.Job_Type, jt.Job_Status, jt.Created_On,
          ut.UserID, ut.FirstName, ut.LastName, ut.Role, ut.PhoneNumber, ct.Client_ID, ct.Client_Name, ct.Client_Address, ct.Client_Contact from jobs jt
           INNER JOIN users ut ON jt.UserID = ut.UserID
           INNER JOIN clients ct ON jt.FClient_ID = ct.Client_ID`,
