@@ -3,6 +3,7 @@ const {
   getClients,
   getClientByClientId,
   updateClients,
+  getClientCount,
 } = require("./client.service");
 
 module.exports = {
@@ -24,6 +25,18 @@ module.exports = {
   },
   getClients: (req, res) => {
     getClients((err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      return res.json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
+  getClientCount: (req, res) => {
+    getClientCount((err, results) => {
       if (err) {
         console.log(err);
         return;

@@ -36,6 +36,19 @@ module.exports = {
       }
     );
   },
+  getUserCount: (callBack) => {
+    pool.query(
+      `select COUNT(*) 'total_count', COUNT(IF(Role = 'admin', 1, NULL)) 'Admin', COUNT(IF(Role = 'supervisor', 1, NULL)) 'Supervisor', COUNT(IF(Role = 'technician', 1, NULL)) 'Technician' from prengineers.users;`,
+      [],
+      (error, results, fields) => {
+        if (error) {
+          console.log(error);
+          return callBack(error);
+        }
+        return callBack(null, results);
+      }
+    );
+  },
   getUserByUserId: (id, callBack) => {
     pool.query(
       `select ut.UserID, ut.FirstName, ut.LastName, ut.Role, ut.EmailID, ut.PhoneNumber, ut.status, ut.Client_ID, ct.Client_Name, ct.Client_Address, ct.Client_Contact, ct.Client_Status from users ut

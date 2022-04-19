@@ -1,4 +1,10 @@
-const { create, getJobByJobId, getJobs, updateJobs } = require("./job.service");
+const {
+  create,
+  getJobByJobId,
+  getJobs,
+  updateJobs,
+  getJobCount,
+} = require("./job.service");
 
 module.exports = {
   createJob: (req, res) => {
@@ -39,6 +45,18 @@ module.exports = {
   },
   getJobs: (req, res) => {
     getJobs((err, results) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      return res.json({
+        success: 1,
+        data: results,
+      });
+    });
+  },
+  getJobCount: (req, res) => {
+    getJobCount((err, results) => {
       if (err) {
         console.log(err);
         return;

@@ -22,6 +22,19 @@ module.exports = {
       return callBack(null, results);
     });
   },
+  getClientCount: (callBack) => {
+    pool.query(
+      `select COUNT(*) 'total_count', COUNT(IF(Client_Status = 'active', 1, NULL)) 'Active', COUNT(IF(Client_Status = 'inactive', 1, NULL)) 'Inactive' from clients`,
+      [],
+      (error, results, fields) => {
+        if (error) {
+          console.log(error);
+          return callBack(error);
+        }
+        return callBack(null, results);
+      }
+    );
+  },
   getClientByClientId: (id, callBack) => {
     pool.query(
       `select Client_ID, Client_Name, Client_Address, Client_Contact, Client_Status from clients where Client_ID = ?`,

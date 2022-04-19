@@ -62,6 +62,19 @@ module.exports = {
       }
     );
   },
+  getJobCount: (callBack) => {
+    pool.query(
+      `select COUNT(*) 'total_count', COUNT(IF(Job_Status = 'new', 1, NULL)) 'New', COUNT(IF(Job_Status = 'inprogress', 1, NULL)) 'Inprogress', COUNT(IF(Job_Status = 'closed', 1, NULL)) 'Closed' from prengineers.jobs`,
+      [],
+      (error, results, fields) => {
+        if (error) {
+          console.log(error);
+          return callBack(error);
+        }
+        return callBack(null, results);
+      }
+    );
+  },
   getJobByJobId: (id, callBack) => {
     pool.query(
       `  select jt.Job_ID, jt.FClient_ID, jt.UserID, jt.Job_Subject, jt.Job_Description, jt.Job_Type, jt.Job_Status,
@@ -85,14 +98,8 @@ module.exports = {
   },
   updateJobs: (data, callBack) => {
     pool.query(
-      `update jobs set Job_Subject=?, Job_Description=?, Job_Type=?, Job_Status=? where Job_ID = ?`,
-      [
-        data.job_subject,
-        data.job_description,
-        data.job_type,
-        data.job_status,
-        data.job_id,
-      ],
+      `update jobs set Job_Status=? where Job_ID = ?`,
+      [data.job_status, data.job_id],
       (error, results, fields) => {
         if (error) {
           callBack(error);
