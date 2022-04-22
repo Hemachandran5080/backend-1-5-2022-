@@ -97,7 +97,7 @@ module.exports = {
   },
   getUserByUserEmail: (EmailID, callBack) => {
     pool.query(
-      `select * from users ut INNER JOIN clients ct ON ut.Client_ID = ct.Client_ID where ut.EmailID = ?`,
+      `select * from users where EmailID = ?`,
       [EmailID],
       (error, results, fields) => {
         if (error) {
