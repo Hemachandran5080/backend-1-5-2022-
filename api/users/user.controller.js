@@ -54,7 +54,7 @@ module.exports = {
           username: results[0].FirstName,
           role: results[0].Role,
           client_ID: results[0].Client_ID,
-          clinet_Name: result[0].Client_Name,
+          client_Name: result[0].Client_Name,
         });
       } else {
         return res.json({
